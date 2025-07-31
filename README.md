@@ -61,7 +61,7 @@ tar xvf MLNX_OFED_LINUX-4.6-1.0.1.1-ubuntu18.04-x86_64.tgz
 cd MLNX_OFED_LINUX-4.6-1.0.1.1-ubuntu18.04-x86_64
 sudo ./mlnxofedinstall --add-kernel-support --dpdk --upstream-libs # it's fine to see 'Failed to install libibverbs-dev DEB'
 
-# kill 
+# 先杀死所有ibacm进程
 sudo systemctl stop ibacm
 
 sudo /etc/init.d/openibd restart
@@ -75,7 +75,7 @@ echo Y | sudo apt-get install libnuma-dev libmnl-dev libnl-3-dev libnl-route-3-d
 echo Y | sudo apt-get install libcrypto++-dev libcrypto++-doc libcrypto++-utils
 echo Y | sudo apt-get install software-properties-common
 echo Y | sudo apt-get install gcc-9 g++-9 python-pip
-echo Y | sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+echo Y | sudo add-apt-repository ppa:ubuntu-toolchain-r/test # 好像只有这句有更新
 echo Y | sudo apt-get purge cmake
 sudo pip install --upgrade pip
 sudo pip install cmake
