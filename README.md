@@ -97,7 +97,7 @@ sudo ./scripts/setup_machine.sh
 ```
 
 ### Configure AIFM (only on the compute node)
-So far you have built AIFM on both nodes. One node is used as the compute node to run applications, while the other node is used as the remote memory node. Now edit `aifm/configs/ssh` in the compute node; change `MEM_SERVER_SSH_IP` to the IP of the remote memory node (eno49 inet in `ifconfig`), and `MEM_SERVER_SSH_USER` to your ssh username. Please make sure the compute node can ssh the remote memory node successfully without password.
+So far you have built AIFM on both nodes. One node is used as the compute node to run applications, while the other node is used as the remote memory node. Now edit `aifm/configs/ssh` in the compute node; change `MEM_SERVER_SSH_IP` to the IP of the remote memory node (eno49 inet in `ifconfig`), and `MEM_SERVER_SSH_USER` to your ssh username. Please make sure the compute node can ssh the remote memory node successfully without password. # 最好用 root
 
 ## Run AIFM Tests
 Now you are able to run AIFM programs. `aifm/test` contains a bunch of test files of using local/far pointers and containers (and few other system components). You can also treat those tests as examples of using AIFM. `aifm/test.sh` is a script that runs all tests automatically. It includes the commands of running AIFM end-to-end.
