@@ -109,7 +109,7 @@ Now you are able to run AIFM programs. `aifm/test` contains a bunch of test file
 We provide code and scripts in `aifm/exp` folder for reproducing our experiments. For more details, see `aifm/exp/README.md`.
 
 ## Repo Structure
-
+  SFTP 直接进 /root 文件夹 ：sudo chmod 777 /root
 ```
 Github Repo Root
  |---- build_all.sh  # A push-button build script for building both Shenango and AIFM.
