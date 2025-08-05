@@ -48,8 +48,7 @@ namespace far_memory {
         constexpr static uint32_t kNumKVPairs = 1 << 27;
         constexpr static uint32_t kNumItersPerScope = 64;
 
-        // ×¢Òâ£ºÏß³ÌÊý¸ÄÎª²»³¬¹ýCPUºËÐÄÊý£¬·ÀÖ¹µ÷¶ÈÑ¹Á¦
-        constexpr static uint32_t kNumMutatorThreads = 20;
+        constexpr static uint32_t kNumMutatorThreads = 400;
 
         constexpr static uint32_t kReqSeqLenPerCore = kNumKVPairs;
         constexpr static uint32_t kNumConnections = 650;
@@ -79,7 +78,7 @@ namespace far_memory {
         uint64_t prev_us = 0;
         uint64_t running_us = 0;
 
-        bool stop_flag = false; // ÐÂÔöÍ£Ö¹±êÖ¾£¬´úÌæexit()
+        bool stop_flag = false; // æ–°å¢žåœæ­¢æ ‡å¿—ï¼Œä»£æ›¿exit()
 
         inline void append_uint32_to_char_array(uint32_t n, uint32_t suffix_len, char* array) {
             uint32_t len = 0;
@@ -95,7 +94,7 @@ namespace far_memory {
         }
 
         inline void random_string(char* data, uint32_t len) {
-            // ±ÜÃâÖØ¸´ÇÀÕ¼½ûÓÃ£¬È¡ÏûÕâÀïµÄpreempt_disable/enable
+            // é¿å…é‡å¤æŠ¢å ç¦ç”¨ï¼Œå–æ¶ˆè¿™é‡Œçš„preempt_disable/enable
             auto& generator = *generators[get_core_num()];
             std::uniform_int_distribution<int> distribution('a', 'z' + 1);
             for (uint32_t i = 0; i < len; i++) {
@@ -142,7 +141,7 @@ namespace far_memory {
                 thread.Join();
             }
 
-            // ½ûÓÃÇÀÕ¼±£»¤ÒÔÏÂ³õÊ¼»¯
+            // ç¦ç”¨æŠ¢å ä¿æŠ¤ä»¥ä¸‹åˆå§‹åŒ–
             preempt_disable();
             zipf_table_distribution<> zipf(kNumKVPairs, kZipfParamS);
             auto& generator = generators[get_core_num()];
@@ -171,7 +170,7 @@ namespace far_memory {
                     mops_vec.push_back(mops);
                     running_us += (us - prev_us);
 
-                    // µ½´ï×î´óÔËÐÐÊ±¼ä£¬ÉèÖÃÍË³ö±êÖ¾
+                    // åˆ°è¾¾æœ€å¤§è¿è¡Œæ—¶é—´ï¼Œè®¾ç½®é€€å‡ºæ ‡å¿—
                     if (running_us >= kMaxRunningUs) {
                         std::vector<double> last_5_mops(
                             mops_vec.end() - std::min(static_cast<int>(mops_vec.size()), 5),
@@ -181,7 +180,7 @@ namespace far_memory {
                             last_5_mops.size()
                             << std::endl;
                         std::cout << "Done. Preparing to exit..." << std::endl;
-                        stop_flag = true;  // ¸ÄÎª±ê¼ÇÍ£Ö¹£¬Ö÷Ïß³Ì¼ì²â
+                        stop_flag = true;  // æ”¹ä¸ºæ ‡è®°åœæ­¢ï¼Œä¸»çº¿ç¨‹æ£€æµ‹
                     }
                     prev_us = us;
                     prev_sum_cnts = sum_cnts;
@@ -197,9 +196,9 @@ namespace far_memory {
                 threads.emplace_back(rt::Thread([&, tid]() {
                     DerefScope scope;
                     uint32_t cnt = 0;
-                    uint32_t local_req_idx = 0;  // Ã¿Ïß³ÌË½ÓÐ·ÃÎÊË÷Òý
+                    uint32_t local_req_idx = 0;  // æ¯çº¿ç¨‹ç§æœ‰è®¿é—®ç´¢å¼•
                     while (true) {
-                        if (stop_flag) break; // ÍË³öÌõ¼þ
+                        if (stop_flag) break; // é€€å‡ºæ¡ä»¶
 
                         if (unlikely(cnt++ % kNumItersPerScope == 0)) {
                             scope.renew();
