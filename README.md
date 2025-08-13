@@ -61,8 +61,7 @@ tar xvf MLNX_OFED_LINUX-4.6-1.0.1.1-ubuntu18.04-x86_64.tgz
 cd MLNX_OFED_LINUX-4.6-1.0.1.1-ubuntu18.04-x86_64
 sudo ./mlnxofedinstall --add-kernel-support --dpdk --upstream-libs # it's fine to see 'Failed to install libibverbs-dev DEB'
 
-# 先杀死所有ibacm进程
-sudo systemctl stop ibacm
+sudo systemctl stop ibacm # 先杀死所有ibacm进程
 
 sudo /etc/init.d/openibd restart
 ```
